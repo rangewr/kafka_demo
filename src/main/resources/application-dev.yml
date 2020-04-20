@@ -1,0 +1,39 @@
+server:
+  port: 8081
+ 
+spring:
+#-----------------------------------------kafka config start--------------------------------------
+  kafka:
+    #指定kafka 代理地址，可以多个,集群配多个,中间,逗号隔开
+    bootstrap-servers: 192.168.1.228:9092
+    # bootstrap-servers: 192.168.5.39:9092,192.168.5.40:9092,192.168.5.41:9092
+    #=============== provider  =======================
+    producer:
+      retries: 0
+      # 每次批量发送消息的数量
+      batch-size: 16384
+      buffer-memory: 33554432
+      # 指定消息key和消息体的编解码方式
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    #=============== consumer  =======================
+    consumer:
+      # 指定默认消费者group id
+      broker-id: 1
+      # group-id: kafka-group
+      group-id: test-consumer-group
+
+      # auto-offset-reset: earliest
+      # enable-auto-commit: true
+      enable-auto-commit: false
+      max-poll-records: 100
+      auto-offset-reset: latest
+      # auto-commit-interval: 100
+      # 指定消息key和消息体的编解码方式
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      ack-mode: manual
+      #每个listener拥有一个处理线程
+      concurrency: 1
+#-----------------------------------------kafka config end--------------------------------------
