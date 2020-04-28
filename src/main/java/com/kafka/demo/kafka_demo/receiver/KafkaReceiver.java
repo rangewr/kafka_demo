@@ -5,7 +5,7 @@
  * 
  * @LastEditors: wangran
  * 
- * @LastEditTime: 2020-04-15 15:35:49
+ * @LastEditTime: 2020-04-22 10:50:14
  */
 package com.kafka.demo.kafka_demo.receiver;
 
@@ -39,8 +39,8 @@ public class KafkaReceiver {
      * @param recordList
      * @param acknowledgment
      */
-    @KafkaListener(id = "start_kafka", topics = {
-            "start_kafka" }, groupId = "kafka-group", containerFactory = "batchFactory")
+    @KafkaListener(id = "postoffice_topic_1", topics = {
+            "postoffice_topic_1" }, groupId = "kafka-group", containerFactory = "batchFactory")
     public void listenTaskStart(List<ConsumerRecord> recordList, Acknowledgment acknowledgment) {
         for (ConsumerRecord record : recordList) {
             JSONObject jsonObject = JSON.parseObject(record.value().toString());
@@ -52,10 +52,10 @@ public class KafkaReceiver {
     }
 
     // 任务启动 每隔15分钟获取一次
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "30 * * * * ?")
     public void taskStartListener() {
         logger.info("开启<任务启动>监听");
-        MessageListenerContainer containerStart = registry.getListenerContainer("start_kafka");
+        MessageListenerContainer containerStart = registry.getListenerContainer("postoffice_topic_1");
         if (!containerStart.isRunning()) {
             containerStart.start();
         }
@@ -68,7 +68,7 @@ public class KafkaReceiver {
         }
         logger.info("关闭<任务启动>监听");
         // 暂停监听
-        MessageListenerContainer containerClose = registry.getListenerContainer("start_kafka");
+        MessageListenerContainer containerClose = registry.getListenerContainer("postoffice_topic_1");
         containerClose.pause();
     }
 
