@@ -5,12 +5,13 @@
  * 
  * @LastEditors: wangran
  * 
- * @LastEditTime: 2020-04-15 15:21:57
+ * @LastEditTime: 2020-07-17 10:03:38
  */
 package com.kafka.demo.kafka_demo.producer;
 
+import java.util.Map;
+
 import com.alibaba.fastjson.JSON;
-import com.kafka.demo.kafka_demo.entity.TrainingInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -23,10 +24,16 @@ public class KafkaProducer {
     private KafkaTemplate<String, Object> kafkaTemplate;
 
     // 启动发送消息方法
-    public void addMessage(TrainingInfo trainingInfo) {
-        String jsonStrTraining = JSON.toJSONString(trainingInfo);
+    public void addMessage(Map<String, Object> map) {
+        String jsonStrTraining = JSON.toJSONString(map);
         System.out.println(jsonStrTraining);
-        kafkaTemplate.send("start_kafka", jsonStrTraining);
+        kafkaTemplate.send("start_clear_data", jsonStrTraining);
+    }
+
+    public void customTopic(Map<String, Object> map) {
+        String jsonStrTraining = JSON.toJSONString(map);
+        System.out.println(jsonStrTraining);
+        kafkaTemplate.send(map.get("topic").toString(), map.get("pwd").toString());
     }
 
 }

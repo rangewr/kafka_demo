@@ -2,11 +2,13 @@
  * @Author: wangran
  * @Date: 2020-04-15 14:53:10
  * @LastEditors: wangran
- * @LastEditTime: 2020-04-24 11:37:13
+ * @LastEditTime: 2020-07-17 10:03:47
  */
 package com.kafka.demo.kafka_demo.controller;
 
-import com.kafka.demo.kafka_demo.entity.TrainingInfo;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.kafka.demo.kafka_demo.producer.KafkaProducer;
 import com.kafka.demo.kafka_demo.utils.ResultJSON;
 
@@ -31,9 +33,22 @@ public class KafkaController {
      * @return:
      */
     @RequestMapping("/addMessage")
-    public ResultJSON addMessage(TrainingInfo trainingInfo) {
+    public ResultJSON addMessage(Integer id, String type) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("id", id);
+        map.put("type", type);
         // 任务存入到kafka消息队列中
-        kafkaProducer.addMessage(trainingInfo);
+        kafkaProducer.addMessage(map);
+        return ResultJSON.success();
+    }
+
+    @RequestMapping("/customTopic")
+    public ResultJSON customTopic(String topic, String pwd) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("topic", topic);
+        map.put("pwd", pwd);
+        // 任务存入到kafka消息队列中
+        kafkaProducer.customTopic(map);
         return ResultJSON.success();
     }
 
